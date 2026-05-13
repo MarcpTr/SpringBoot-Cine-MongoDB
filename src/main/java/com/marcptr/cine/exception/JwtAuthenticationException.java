@@ -2,16 +2,26 @@ package com.marcptr.cine.exception;
 
 import java.util.Map;
 
+import com.marcptr.cine.model.enums.ErrorCode;
+
 public class JwtAuthenticationException   extends RuntimeException {
+  private final ErrorCode code;
+    private final Object details;
 
-    private final Map<String, String> errors;
-
-    public JwtAuthenticationException  (Map<String, String> errors) {
-        super("Invalid JWT");
-        this.errors = errors;
+    public JwtAuthenticationException(ErrorCode code) {
+        this(code, null);
     }
 
-    public Map<String, String> getErrors() {
-        return errors;
+    public JwtAuthenticationException(ErrorCode code, Object details) {
+        this.code = code;
+        this.details = details;
+    }
+
+    public ErrorCode getCode() {
+        return code;
+    }
+
+    public Object getDetails() {
+        return details;
     }
 }

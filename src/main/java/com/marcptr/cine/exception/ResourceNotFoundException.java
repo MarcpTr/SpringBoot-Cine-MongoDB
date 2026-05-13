@@ -2,16 +2,26 @@ package com.marcptr.cine.exception;
 
 import java.util.Map;
 
-public class ResourceNotFoundException extends RuntimeException {
+import com.marcptr.cine.model.enums.ErrorCode;
 
-    private final Map<String, String> errors;
+public class ResourceNotFoundException  extends RuntimeException {
+  private final ErrorCode code;
+    private final Object details;
 
-    public ResourceNotFoundException(Map<String, String> errors) {
-        super("Resource not found");
-        this.errors = errors;
+    public ResourceNotFoundException(ErrorCode code) {
+        this(code, null);
     }
 
-    public Map<String, String> getErrors() {
-        return errors;
+    public ResourceNotFoundException(ErrorCode code, Object details) {
+        this.code = code;
+        this.details = details;
+    }
+
+    public ErrorCode getCode() {
+        return code;
+    }
+
+    public Object getDetails() {
+        return details;
     }
 }

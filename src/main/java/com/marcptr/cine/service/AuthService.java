@@ -18,6 +18,7 @@ import com.marcptr.cine.exception.JwtAuthenticationException;
 import com.marcptr.cine.exception.ResourceAlreadyExistsException;
 import com.marcptr.cine.model.Token;
 import com.marcptr.cine.model.User;
+import com.marcptr.cine.model.enums.ErrorCode;
 import com.marcptr.cine.model.enums.Role;
 import com.marcptr.cine.model.enums.TokenType;
 import com.marcptr.cine.repository.TokenRepository;
@@ -72,8 +73,6 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest request) {
 
-        Map<String, String> errors = new HashMap<>();
-
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
                 request.usernameOrEmail(),
                 request.password());
@@ -82,8 +81,7 @@ public class AuthService {
         try {
             auth = authenticationManager.authenticate(authRequest);
         } catch (AuthenticationException e) {
-            errors.put("error", "access denied, bad credentials");
-            throw new InvalidCredentialsException(errors);
+            throw new InvalidCredentialsException(ErrorCode.LOGIN_ERROR);
         }
 
         User user = (User) auth.getPrincipal();
@@ -110,7 +108,8 @@ public class AuthService {
         try {
             claims = jwtService.extractClaim(refreshToken, c -> c);
         } catch (JwtException e) {
-            throw new JwtAuthenticationException(Map.of("error", "Invalid refresh token"));
+            throw new JwtAuthenticationException(ErrorCode.TOKEN_INVALID, 
+                    "Invalid refresh token");
         }
 
         String username = claims.getSubject();
@@ -119,18 +118,18 @@ public class AuthService {
         User user = (User) userService.loadUserByUsername(username);
 
         Token storedToken = tokenRepository.findByJti(jti)
-                .orElseThrow(() -> new JwtAuthenticationException(Map.of("error", "Token not found")));
+                .orElseThrow(() -> new JwtAuthenticationException(ErrorCode.TOKEN_INVALID, "Token not found"));
 
         if (storedToken.isExpired() || storedToken.isRevoked()) {
-            throw new JwtAuthenticationException(Map.of("error", "Token expired or revoked"));
+            throw new JwtAuthenticationException(ErrorCode.TOKEN_INVALID, "Token expired or revoked");
         }
 
         if (storedToken.getTokenType() != TokenType.REFRESH) {
-            throw new JwtAuthenticationException(Map.of("error", "Invalid token type"));
+            throw new JwtAuthenticationException(ErrorCode.TOKEN_INVALID,"Invalid token type");
         }
 
         if (!jwtService.isTokenValid(refreshToken, user, TokenType.REFRESH)) {
-            throw new JwtAuthenticationException(Map.of("error", "Invalid token"));
+            throw new JwtAuthenticationException(ErrorCode.TOKEN_INVALID, "Invalid token");
         }
 
         tokenService.revokeToken(refreshToken);

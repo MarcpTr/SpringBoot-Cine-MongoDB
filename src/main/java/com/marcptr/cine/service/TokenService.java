@@ -10,13 +10,13 @@ import com.marcptr.cine.dto.ActiveSessionResponse;
 import com.marcptr.cine.exception.ResourceNotFoundException;
 import com.marcptr.cine.model.Token;
 import com.marcptr.cine.model.User;
+import com.marcptr.cine.model.enums.ErrorCode;
 import com.marcptr.cine.model.enums.TokenType;
 import com.marcptr.cine.repository.TokenRepository;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-
 
 @Service
 @RequiredArgsConstructor
@@ -31,14 +31,11 @@ public class TokenService {
         }
         String jti = jwtService.extractJti(jwtToken);
 
-        var token = Token.builder()
-                .userId(user.getId())
-                .token(jwtToken)
-                .tokenType(tokenType)
-                .jti(jti)
-                .expired(false)
-                .revoked(false)
-                .build();
+        var token = Token.create(
+                jwtToken,
+                tokenType,
+                jti,
+                user.getId());
         tokenRepository.save(token);
     }
 
@@ -88,7 +85,7 @@ public class TokenService {
     public void revokeSession(User user, String tokenId) {
 
         Token token = tokenRepository.findById(tokenId)
-                .orElseThrow(() -> new ResourceNotFoundException(Map.of("error", "ID session not found")));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.RESOURCE_NOT_FOUND, Map.of("error", "ID session not found")));
 
         if (!token.getUserId().equals(user.getId())) {
             throw new AccessDeniedException("Not your session");

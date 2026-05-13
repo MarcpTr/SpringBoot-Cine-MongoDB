@@ -3,5 +3,5 @@ package com.marcptr.cine.dto;
 public record ApiError<T> (
     String code,
     String message,
-    T details
+    Object details
 ){}
