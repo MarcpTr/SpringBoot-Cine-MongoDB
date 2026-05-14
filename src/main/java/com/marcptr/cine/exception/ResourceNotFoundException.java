@@ -1,7 +1,5 @@
 package com.marcptr.cine.exception;
 
-import java.util.Map;
-
 import com.marcptr.cine.model.enums.ErrorCode;
 
 public class ResourceNotFoundException  extends RuntimeException {
