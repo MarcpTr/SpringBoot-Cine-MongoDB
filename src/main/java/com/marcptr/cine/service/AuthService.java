@@ -22,6 +22,7 @@ import com.marcptr.cine.model.enums.ErrorCode;
 import com.marcptr.cine.model.enums.Role;
 import com.marcptr.cine.model.enums.TokenType;
 import com.marcptr.cine.repository.TokenRepository;
+import com.marcptr.cine.utils.MessageResolver;
 
 @Service
 @RequiredArgsConstructor
@@ -34,20 +35,21 @@ public class AuthService {
     private final TokenService tokenService;
     private final TokenRepository tokenRepository;
     private final SessionPolicyService sessionPolicyService;
+    private final MessageResolver messageResolver;
 
     public AuthResponse register(RegisterRequest request) {
-        Map<String, String> errors = new HashMap<>();
+        Map<ErrorCode, String> errors = new HashMap<>();
 
         if (userService.existsByEmail(request.email())) {
-            errors.put("email", "error.register.EMAIL_EXIST");
+            errors.put(ErrorCode.EMAIL_ALREADY_EXISTS, messageResolver.resolveMessage(ErrorCode.EMAIL_ALREADY_EXISTS));
         }
 
         if (userService.existsByUsername(request.username())) {
-            errors.put("username", "error.register.USERNAME_EXIST");
+            errors.put(ErrorCode.USERNAME_ALREADY_EXISTS,  messageResolver.resolveMessage(ErrorCode.USERNAME_ALREADY_EXISTS));
         }
 
         if (!errors.isEmpty()) {
-            throw new ResourceAlreadyExistsException(errors);
+            throw new ResourceAlreadyExistsException(ErrorCode.RESOURCE_ALREADY_EXIST, errors);
         }
 
         User user = User.create(

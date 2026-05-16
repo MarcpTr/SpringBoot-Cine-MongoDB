@@ -18,6 +18,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import com.marcptr.cine.dto.ApiError;
 import com.marcptr.cine.dto.ApiResponse;
 import com.marcptr.cine.model.enums.ErrorCode;
+import com.marcptr.cine.utils.MessageResolver;
+
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class GlobalExceptionHandler {
 
         private final MessageSource messageSource;
+        private final MessageResolver messageResolver;
 
         @ExceptionHandler(Exception.class)
         public ResponseEntity<ApiResponse<Map<String, String>>> handleGenericException(Exception ex) {
@@ -33,7 +36,7 @@ public class GlobalExceptionHandler {
                 ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
 
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                .body(ApiResponse.fail(errorCode.toString(), resolveMessage(errorCode), null));
+                                .body(ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode), null));
         }
 
         @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -47,7 +50,7 @@ public class GlobalExceptionHandler {
                                 .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
 
                 return ResponseEntity.badRequest().body(
-                                ApiResponse.fail(errorCode.toString(), resolveMessage(errorCode), errors));
+                                ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode), errors));
         }
 
         @ExceptionHandler(ConstraintViolationException.class)
@@ -64,7 +67,7 @@ public class GlobalExceptionHandler {
                 });
 
                 return ResponseEntity.badRequest().body(
-                                ApiResponse.fail(errorCode.toString(), resolveMessage(errorCode), errors));
+                                ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode), errors));
         }
 
         @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -81,7 +84,7 @@ public class GlobalExceptionHandler {
                 errors.put(field, "Debe ser de tipo: " + expectedType);
 
                 return ResponseEntity.badRequest()
-                                .body(ApiResponse.fail(errorCode.toString(), resolveMessage(errorCode), errors));
+                                .body(ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode), errors));
         }
 
         @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
@@ -99,7 +102,7 @@ public class GlobalExceptionHandler {
                 errors.put("allowed", "Allowed methods: " + supportedMethods);
 
                 return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
-                                .body(ApiResponse.fail(errorCode.toString(), resolveMessage(errorCode), errors));
+                                .body(ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode), errors));
         }
 
         @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -108,7 +111,7 @@ public class GlobalExceptionHandler {
                 ErrorCode errrorCode = ErrorCode.INVALID_JSON;
 
                 return ResponseEntity.badRequest().body(
-                                ApiResponse.fail(errrorCode.toString(), resolveMessage(errrorCode), null));
+                                ApiResponse.fail(errrorCode.toString(), messageResolver.resolveMessage(errrorCode), null));
         }
 
         @ExceptionHandler(MissingServletRequestParameterException.class)
@@ -121,7 +124,7 @@ public class GlobalExceptionHandler {
                 errors.put(ex.getParameterName(), "Parameter is required");
 
                 return ResponseEntity.badRequest()
-                                .body(ApiResponse.fail(errorCode.toString(), resolveMessage(errorCode), errors));
+                                .body(ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode), errors));
         }
 
         @ExceptionHandler(AccessDeniedException.class)
@@ -130,7 +133,7 @@ public class GlobalExceptionHandler {
                 ErrorCode errorCode = ErrorCode.ACCESS_DENIED;
 
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                                .body(ApiResponse.fail(errorCode.toString(), resolveMessage(errorCode), null));
+                                .body(ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode), null));
         }
 
         // Custom Exceptions
@@ -139,7 +142,7 @@ public class GlobalExceptionHandler {
         public ResponseEntity<ApiResponse<Void>> handleInvalidCredentials(
                         InvalidCredentialsException ex) {
 
-                String message = resolveMessage(ex.getCode());
+                String message = messageResolver.resolveMessage(ex.getCode());
                 ApiError<Object> error = new ApiError<>(
                                 ex.getCode().name(),
                                 message,
@@ -151,7 +154,7 @@ public class GlobalExceptionHandler {
         @ExceptionHandler(JwtAuthenticationException.class)
         public ResponseEntity<ApiResponse<Map<String, String>>> handleJwtAuthenticationException(
                         JwtAuthenticationException ex) {
-                String message = resolveMessage(ex.getCode());
+                String message = messageResolver.resolveMessage(ex.getCode());
                 ApiError<Object> error = new ApiError<>(
                                 ex.getCode().name(),
                                 message,
@@ -163,7 +166,7 @@ public class GlobalExceptionHandler {
         @ExceptionHandler(ResourceNotFoundException.class)
         public ResponseEntity<ApiResponse<Map<String, String>>> handleResouceNotFound(ResourceNotFoundException ex) {
 
-                String message = resolveMessage(ex.getCode());
+                String message = messageResolver.resolveMessage(ex.getCode());
                 ApiError<Object> error = new ApiError<>(
                                 ex.getCode().name(),
                                 message,
@@ -173,12 +176,18 @@ public class GlobalExceptionHandler {
                                 .body(ApiResponse.fail(error));
         }
 
-        private String resolveMessage(ErrorCode code) {
-                return messageSource.getMessage(
-                                "error." + code.name(),
-                                null,
-                                LocaleContextHolder.getLocale());
+        @ExceptionHandler(ResourceAlreadyExistsException.class)
+        public ResponseEntity<ApiResponse<Map<String, String>>> handleResourceAlreadyExist(
+                        ResourceAlreadyExistsException ex) {
+                String message = messageResolver.resolveMessage(ex.getCode());
+                ApiError<Object> error = new ApiError<>(
+                                ex.getCode().name(),
+                                message,
+                                ex.getDetails());
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                                .body(ApiResponse.fail(error));
         }
+
 }
 /*
  * @ExceptionHandler(MissingFieldsException.class)
@@ -193,7 +202,7 @@ public class GlobalExceptionHandler {
  * @ExceptionHandler(FieldValidationException.class)
  * public ResponseEntity<ApiResponse<Void>>
  * handleFieldValidation(FieldValidationException ex) {
- * String message = resolveMessage(ex.getCode());
+ * String message = messageResolver.resolveMessage(ex.getCode());
  * ApiError<Object> error = new ApiError<>(
  * ex.getCode().name(),
  * message,
@@ -202,13 +211,13 @@ public class GlobalExceptionHandler {
  * .body(ApiResponse.fail(error));
  * }
  * 
- * @ExceptionHandler(ResourceAlreadyExistsException.class)
- * public ResponseEntity<ApiResponse<Map<String, String>>>
- * handleResourceAlreadyExist(
- * ResourceAlreadyExistsException ex) {
- * return ResponseEntity.status(HttpStatus.CONFLICT).body(
- * ApiResponse.fail("RESOURCE_ALREADY_EXISTS",
- * "The provided data is already in use",
- * ex.getErrors()));
- * }
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
  */
