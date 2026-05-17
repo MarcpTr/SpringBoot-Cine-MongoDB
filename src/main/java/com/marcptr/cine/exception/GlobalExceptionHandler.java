@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -27,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-        private final MessageSource messageSource;
         private final MessageResolver messageResolver;
 
         @ExceptionHandler(Exception.class)
@@ -189,35 +187,3 @@ public class GlobalExceptionHandler {
         }
 
 }
-/*
- * @ExceptionHandler(MissingFieldsException.class)
- * public ResponseEntity<ApiResponse<Map<String, String>>>
- * handleMissingFields(MissingFieldsException ex) {
- * return ResponseEntity.status(HttpStatus.BAD_REQUEST)
- * .body(ApiResponse.fail("MISSING_REQUIRED_FIELD",
- * "Some required fields are missing",
- * ex.getErrors()));
- * }
- * 
- * @ExceptionHandler(FieldValidationException.class)
- * public ResponseEntity<ApiResponse<Void>>
- * handleFieldValidation(FieldValidationException ex) {
- * String message = messageResolver.resolveMessage(ex.getCode());
- * ApiError<Object> error = new ApiError<>(
- * ex.getCode().name(),
- * message,
- * ex.getDetails());
- * return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
- * .body(ApiResponse.fail(error));
- * }
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- */
