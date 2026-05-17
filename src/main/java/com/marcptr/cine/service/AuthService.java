@@ -83,7 +83,7 @@ public class AuthService {
         try {
             auth = authenticationManager.authenticate(authRequest);
         } catch (AuthenticationException e) {
-            throw new InvalidCredentialsException(ErrorCode.LOGIN_ERROR);
+            throw new InvalidCredentialsException(ErrorCode.INVALID_CREDENTIALS);
         }
 
         User user = (User) auth.getPrincipal();
@@ -110,7 +110,7 @@ public class AuthService {
         try {
             claims = jwtService.extractClaim(refreshToken, c -> c);
         } catch (JwtException e) {
-            throw new JwtAuthenticationException(ErrorCode.TOKEN_INVALID, 
+            throw new JwtAuthenticationException(ErrorCode.INVALID_TOKEN, 
                     "Invalid refresh token");
         }
 
@@ -120,18 +120,18 @@ public class AuthService {
         User user = (User) userService.loadUserByUsername(username);
 
         Token storedToken = tokenRepository.findByJti(jti)
-                .orElseThrow(() -> new JwtAuthenticationException(ErrorCode.TOKEN_INVALID, "Token not found"));
+                .orElseThrow(() -> new JwtAuthenticationException(ErrorCode.INVALID_TOKEN, "Token not found"));
 
         if (storedToken.isExpired() || storedToken.isRevoked()) {
-            throw new JwtAuthenticationException(ErrorCode.TOKEN_INVALID, "Token expired or revoked");
+            throw new JwtAuthenticationException(ErrorCode.INVALID_TOKEN, "Token expired or revoked");
         }
 
         if (storedToken.getTokenType() != TokenType.REFRESH) {
-            throw new JwtAuthenticationException(ErrorCode.TOKEN_INVALID,"Invalid token type");
+            throw new JwtAuthenticationException(ErrorCode.INVALID_TOKEN,"Invalid token type");
         }
 
         if (!jwtService.isTokenValid(refreshToken, user, TokenType.REFRESH)) {
-            throw new JwtAuthenticationException(ErrorCode.TOKEN_INVALID, "Invalid token");
+            throw new JwtAuthenticationException(ErrorCode.INVALID_TOKEN, "Invalid token");
         }
 
         tokenService.revokeToken(refreshToken);
