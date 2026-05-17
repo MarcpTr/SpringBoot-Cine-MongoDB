@@ -111,7 +111,7 @@ public class AuthService {
             claims = jwtService.extractClaim(refreshToken, c -> c);
         } catch (JwtException e) {
             throw new JwtAuthenticationException(ErrorCode.INVALID_TOKEN, 
-                    "Invalid refresh token");
+                    messageResolver.resolveMessage(ErrorCode.INVALID_TOKEN));
         }
 
         String username = claims.getSubject();
@@ -120,18 +120,18 @@ public class AuthService {
         User user = (User) userService.loadUserByUsername(username);
 
         Token storedToken = tokenRepository.findByJti(jti)
-                .orElseThrow(() -> new JwtAuthenticationException(ErrorCode.INVALID_TOKEN, "Token not found"));
+                .orElseThrow(() -> new JwtAuthenticationException(ErrorCode.INVALID_TOKEN,  messageResolver.resolveMessage(ErrorCode.TOKEN_NOT_FOUND)));
 
         if (storedToken.isExpired() || storedToken.isRevoked()) {
-            throw new JwtAuthenticationException(ErrorCode.INVALID_TOKEN, "Token expired or revoked");
+            throw new JwtAuthenticationException(ErrorCode.INVALID_TOKEN,  messageResolver.resolveMessage(ErrorCode.INVALID_TOKEN));
         }
 
         if (storedToken.getTokenType() != TokenType.REFRESH) {
-            throw new JwtAuthenticationException(ErrorCode.INVALID_TOKEN,"Invalid token type");
+            throw new JwtAuthenticationException(ErrorCode.INVALID_TOKEN, messageResolver.resolveMessage(ErrorCode.INVALID_TOKEN_TYPE));
         }
 
         if (!jwtService.isTokenValid(refreshToken, user, TokenType.REFRESH)) {
-            throw new JwtAuthenticationException(ErrorCode.INVALID_TOKEN, "Invalid token");
+            throw new JwtAuthenticationException(ErrorCode.INVALID_TOKEN,  messageResolver.resolveMessage(ErrorCode.INVALID_TOKEN));
         }
 
         tokenService.revokeToken(refreshToken);
