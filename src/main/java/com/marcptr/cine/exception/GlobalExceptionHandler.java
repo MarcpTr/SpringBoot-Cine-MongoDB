@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import com.marcptr.cine.dto.ApiError;
 import com.marcptr.cine.dto.ApiResponse;
+import com.marcptr.cine.exception.tmdb.TmdbException;
 import com.marcptr.cine.model.enums.ErrorCode;
 import com.marcptr.cine.utils.MessageResolver;
 
@@ -134,6 +135,19 @@ public class GlobalExceptionHandler {
         }
 
         // Custom Exceptions
+
+          @ExceptionHandler(TmdbException.class)
+        public ResponseEntity<ApiResponse<Void>> handleTmdbClieEntity(
+                        TmdbException ex) {
+
+                String message = messageResolver.resolveMessage(ex.getCode());
+                ApiError<Object> error = new ApiError<>(
+                                ex.getCode().name(),
+                                message,
+                                ex.getDetails());
+
+                return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(ApiResponse.fail(error));
+        }
 
         @ExceptionHandler(InvalidCredentialsException.class)
         public ResponseEntity<ApiResponse<Void>> handleInvalidCredentials(

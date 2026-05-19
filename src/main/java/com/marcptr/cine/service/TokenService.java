@@ -6,7 +6,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
-import com.marcptr.cine.dto.ActiveSessionResponse;
+import com.marcptr.cine.dto.response.ActiveSessionResponse;
 import com.marcptr.cine.exception.ResourceNotFoundException;
 import com.marcptr.cine.model.Token;
 import com.marcptr.cine.model.User;

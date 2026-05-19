@@ -13,6 +13,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.marcptr.cine.dto.*;
+import com.marcptr.cine.dto.request.LoginRequest;
+import com.marcptr.cine.dto.request.RefreshRequest;
+import com.marcptr.cine.dto.request.RegisterRequest;
+import com.marcptr.cine.dto.response.AuthResponse;
+import com.marcptr.cine.dto.response.RefreshResponse;
 import com.marcptr.cine.exception.InvalidCredentialsException;
 import com.marcptr.cine.exception.JwtAuthenticationException;
 import com.marcptr.cine.exception.ResourceAlreadyExistsException;

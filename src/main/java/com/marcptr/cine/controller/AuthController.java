@@ -7,6 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.marcptr.cine.dto.*;
+import com.marcptr.cine.dto.request.LoginRequest;
+import com.marcptr.cine.dto.request.RefreshRequest;
+import com.marcptr.cine.dto.request.RegisterRequest;
+import com.marcptr.cine.dto.response.AuthResponse;
+import com.marcptr.cine.dto.response.RefreshResponse;
 import com.marcptr.cine.service.AuthService;
 @RestController
 @RequestMapping("/api/auth")
@@ -27,6 +32,7 @@ public class AuthController {
     public ResponseEntity<ApiResponse<AuthResponse>> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(ApiResponse.ok(authService.login(request)));
     }
+    
 
     @PostMapping("/refresh")
     public ResponseEntity<ApiResponse<RefreshResponse>> refresh(@Valid @RequestBody RefreshRequest request) {

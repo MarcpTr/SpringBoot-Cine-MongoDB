@@ -1,4 +1,4 @@
-package com.marcptr.cine.dto;
+package com.marcptr.cine.dto.request;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

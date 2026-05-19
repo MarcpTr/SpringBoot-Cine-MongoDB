@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.marcptr.cine.dto.ActiveSessionResponse;
 import com.marcptr.cine.dto.ApiResponse;
+import com.marcptr.cine.dto.response.ActiveSessionResponse;
 import com.marcptr.cine.model.User;
 import com.marcptr.cine.service.TokenService;
 

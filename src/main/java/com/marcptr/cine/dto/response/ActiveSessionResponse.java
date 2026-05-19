@@ -1,4 +1,4 @@
-package com.marcptr.cine.dto;
+package com.marcptr.cine.dto.response;
 
 
 public record ActiveSessionResponse(
