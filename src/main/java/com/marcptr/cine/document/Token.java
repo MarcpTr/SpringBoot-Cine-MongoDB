@@ -1,4 +1,4 @@
-package com.marcptr.cine.model;
+package com.marcptr.cine.document;
 
 import java.time.LocalDateTime;
 

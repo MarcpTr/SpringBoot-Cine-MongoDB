@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.marcptr.cine.model.User;
+import com.marcptr.cine.document.User;
 import com.marcptr.cine.model.enums.Role;
 
 public interface UserRepository extends MongoRepository<User, String> {

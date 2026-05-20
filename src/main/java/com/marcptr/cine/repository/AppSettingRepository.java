@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.marcptr.cine.model.AppSetting;
+import com.marcptr.cine.document.AppSetting;
 
 public interface AppSettingRepository extends MongoRepository<AppSetting, String> {
 

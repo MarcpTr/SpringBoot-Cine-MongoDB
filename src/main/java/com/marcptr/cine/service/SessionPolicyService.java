@@ -2,9 +2,9 @@ package com.marcptr.cine.service;
 
 import org.springframework.stereotype.Service;
 
+import com.marcptr.cine.document.AppSetting;
 import com.marcptr.cine.exception.FieldValidationException;
 import com.marcptr.cine.exception.ResourceNotFoundException;
-import com.marcptr.cine.model.AppSetting;
 import com.marcptr.cine.model.enums.ErrorCode;
 import com.marcptr.cine.repository.AppSettingRepository;
 import com.marcptr.cine.utils.MessageResolver;

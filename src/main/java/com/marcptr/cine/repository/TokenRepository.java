@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.marcptr.cine.model.Token;
+import com.marcptr.cine.document.Token;
 import com.marcptr.cine.model.enums.TokenType;
 
 public interface TokenRepository extends MongoRepository<Token, String> {

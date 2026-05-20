@@ -13,7 +13,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.marcptr.cine.model.Token;
+import com.marcptr.cine.document.Token;
 import com.marcptr.cine.model.enums.TokenType;
 import com.marcptr.cine.service.JwtService;
 import com.marcptr.cine.service.TokenService;

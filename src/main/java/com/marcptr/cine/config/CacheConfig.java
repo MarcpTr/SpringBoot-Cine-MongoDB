@@ -1,5 +1,6 @@
 package com.marcptr.cine.config;
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -14,15 +15,12 @@ public class CacheConfig {
 
     @Bean
     public CacheManager cacheManager() {
-
-        CaffeineCacheManager manager =
-                new CaffeineCacheManager();
+        CaffeineCacheManager manager = new CaffeineCacheManager("movies");
 
         manager.setCaffeine(
                 Caffeine.newBuilder()
-                        .expireAfterWrite(1, TimeUnit.HOURS)
                         .maximumSize(1000)
-        );
+                        .expireAfterWrite(Duration.ofHours(6)));
 
         return manager;
     }

@@ -49,7 +49,7 @@ public class TmdbClient {
                                                         .path("/movie/" + id)
                                                         .queryParam("language", lang)
                                                         .queryParam("append_to_response",
-                                                                        "videos,credits,images,keywords,recommendations,similar,release_dates,watch/providers")
+                                                                        "videos,credits")
                                                         .queryParam("api_key", apiKey)
                                                         .build())
                                         .retrieve()
