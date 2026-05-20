@@ -31,7 +31,6 @@ public class TmdbController {
 
     @GetMapping("/movie/{id}")
     public TmdbMovieResponse getMethodName(@PathVariable int id, Locale locale) {
-        System.out.println(id + " " +locale.getLanguage()+"_"+locale.getCountry());
         return mService.searchMovie(id, locale.getLanguage()+"-"+locale.getCountry() );
     }
 

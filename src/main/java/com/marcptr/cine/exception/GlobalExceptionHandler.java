@@ -77,9 +77,9 @@ public class GlobalExceptionHandler {
                 String field = ex.getName();
                 String expectedType = ex.getRequiredType() != null
                                 ? ex.getRequiredType().getSimpleName()
-                                : "tipo válido";
+                                : "Valid type";
 
-                errors.put(field, "Debe ser de tipo: " + expectedType);
+                errors.put(field, "Required type: " + expectedType);
 
                 return ResponseEntity.badRequest()
                                 .body(ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode), errors));
