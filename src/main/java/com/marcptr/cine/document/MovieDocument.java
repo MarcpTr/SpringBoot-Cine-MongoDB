@@ -36,6 +36,8 @@ public class MovieDocument {
     private String lang;
     @Indexed(expireAfterSeconds = 86400)
     private Instant cachedAt;
+    
+    private boolean notFound;
 
     private Boolean adult;
     private String backdropPath;

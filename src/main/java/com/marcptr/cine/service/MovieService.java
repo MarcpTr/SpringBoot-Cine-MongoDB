@@ -1,11 +1,15 @@
 package com.marcptr.cine.service;
 
+import java.time.Instant;
+
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import com.marcptr.cine.client.TmdbClient;
 import com.marcptr.cine.document.MovieDocument;
 import com.marcptr.cine.dto.response.tmdb.TmdbMovieResponse;
+import com.marcptr.cine.exception.tmdb.TmdbNotFoundException;
 import com.marcptr.cine.mapper.MovieMapper;
+import com.marcptr.cine.model.enums.ErrorCode;
 import com.marcptr.cine.repository.MovieDocumentRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -16,23 +20,44 @@ public class MovieService {
     private final MovieDocumentRepository mDocumentRepository;
     private final MovieMapper movieMapper;
 
-   @Cacheable(value = "movies", key = "#id + '-' + #lang")
-    public TmdbMovieResponse searchMovie(int id, String lang) {
+    @Cacheable(value = "movies", key = "#id + '-' + #lang")
+    public TmdbMovieResponse getMovie(long id, String lang) {
+         return mDocumentRepository
+            .findByMovieIdAndLang(id, lang)
+            .map(doc -> {
 
-        return mDocumentRepository
-                .findByMovieIdAndLang((long) id, lang)
-                .map(movieMapper::toDto)
-                .orElseGet(() -> fetchAndSaveMovie(id, lang));
-    }
+                if (doc.isNotFound()) {
+                    throw new TmdbNotFoundException(ErrorCode.TMDB_NOT_FOUND);
+                }
 
-    private TmdbMovieResponse fetchAndSaveMovie(int id, String lang) {
+                return movieMapper.toDto(doc);
+            })
+            .orElseGet(() -> fetchAndSaveMovie(id, lang));
+}
+    private TmdbMovieResponse fetchAndSaveMovie(long id, String lang) {
 
-        TmdbMovieResponse tmdb = tmdbClient.searchMovie(id, lang);
+        try {
 
-        MovieDocument document = movieMapper.toDocument(tmdb, lang);
+            TmdbMovieResponse tmdb = tmdbClient.getMovie(id, lang);
 
-        mDocumentRepository.save(document);
+            MovieDocument document = movieMapper.toDocument(tmdb, lang);
 
-        return movieMapper.toDto(document);
+            mDocumentRepository.save(document);
+
+            return movieMapper.toDto(document);
+
+        } catch (TmdbNotFoundException e) {
+            MovieDocument notFoundDoc = MovieDocument.builder()
+                    .id(id + "_" + lang)
+                    .movieId(id)
+                    .lang(lang)
+                    .notFound(true)
+                    .cachedAt(Instant.now())
+                    .build();
+
+            mDocumentRepository.save(notFoundDoc);
+
+            throw e;
+        }
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import com.marcptr.cine.dto.ApiError;
 import com.marcptr.cine.dto.ApiResponse;
 import com.marcptr.cine.exception.tmdb.TmdbException;
+import com.marcptr.cine.exception.tmdb.TmdbNotFoundException;
 import com.marcptr.cine.model.enums.ErrorCode;
 import com.marcptr.cine.utils.MessageResolver;
 
@@ -34,7 +35,8 @@ public class GlobalExceptionHandler {
                 ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
 
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                .body(ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode), null));
+                                .body(ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode),
+                                                null));
         }
 
         @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -48,7 +50,8 @@ public class GlobalExceptionHandler {
                                 .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
 
                 return ResponseEntity.badRequest().body(
-                                ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode), errors));
+                                ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode),
+                                                errors));
         }
 
         @ExceptionHandler(ConstraintViolationException.class)
@@ -65,7 +68,8 @@ public class GlobalExceptionHandler {
                 });
 
                 return ResponseEntity.badRequest().body(
-                                ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode), errors));
+                                ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode),
+                                                errors));
         }
 
         @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -82,7 +86,8 @@ public class GlobalExceptionHandler {
                 errors.put(field, "Required type: " + expectedType);
 
                 return ResponseEntity.badRequest()
-                                .body(ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode), errors));
+                                .body(ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode),
+                                                errors));
         }
 
         @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
@@ -100,7 +105,8 @@ public class GlobalExceptionHandler {
                 errors.put("allowed", "Allowed methods: " + supportedMethods);
 
                 return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
-                                .body(ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode), errors));
+                                .body(ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode),
+                                                errors));
         }
 
         @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -109,7 +115,8 @@ public class GlobalExceptionHandler {
                 ErrorCode errrorCode = ErrorCode.INVALID_JSON;
 
                 return ResponseEntity.badRequest().body(
-                                ApiResponse.fail(errrorCode.toString(), messageResolver.resolveMessage(errrorCode), null));
+                                ApiResponse.fail(errrorCode.toString(), messageResolver.resolveMessage(errrorCode),
+                                                null));
         }
 
         @ExceptionHandler(MissingServletRequestParameterException.class)
@@ -122,7 +129,8 @@ public class GlobalExceptionHandler {
                 errors.put(ex.getParameterName(), "Parameter is required");
 
                 return ResponseEntity.badRequest()
-                                .body(ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode), errors));
+                                .body(ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode),
+                                                errors));
         }
 
         @ExceptionHandler(AccessDeniedException.class)
@@ -131,13 +139,14 @@ public class GlobalExceptionHandler {
                 ErrorCode errorCode = ErrorCode.ACCESS_DENIED;
 
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                                .body(ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode), null));
+                                .body(ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode),
+                                                null));
         }
 
         // Custom Exceptions
 
-          @ExceptionHandler(TmdbException.class)
-        public ResponseEntity<ApiResponse<Void>> handleTmdbClieEntity(
+        @ExceptionHandler(TmdbException.class)
+        public ResponseEntity<ApiResponse<Void>> handleTmdbClientEntity(
                         TmdbException ex) {
 
                 String message = messageResolver.resolveMessage(ex.getCode());
@@ -147,6 +156,19 @@ public class GlobalExceptionHandler {
                                 ex.getDetails());
 
                 return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(ApiResponse.fail(error));
+        }
+
+        @ExceptionHandler(TmdbNotFoundException.class)
+        public ResponseEntity<ApiResponse<Void>> handleTmdbResourceNotFound(
+                        TmdbNotFoundException ex) {
+
+                String message = messageResolver.resolveMessage(ex.getCode());
+                ApiError<Object> error = new ApiError<>(
+                                ex.getCode().name(),
+                                message,
+                                ex.getDetails());
+
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.fail(error));
         }
 
         @ExceptionHandler(InvalidCredentialsException.class)

@@ -9,6 +9,7 @@ import org.springframework.web.reactive.function.client.WebClientRequestExceptio
 import com.marcptr.cine.dto.response.tmdb.TmdbMovieResponse;
 import com.marcptr.cine.dto.response.tmdb.TmdbSearchMovieResponse;
 import com.marcptr.cine.exception.tmdb.TmdbException;
+import com.marcptr.cine.exception.tmdb.TmdbNotFoundException;
 import com.marcptr.cine.model.enums.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
@@ -42,7 +43,7 @@ public class TmdbClient {
                                 .block();
         }
 
-        public TmdbMovieResponse searchMovie(int id, String lang) {
+        public TmdbMovieResponse getMovie(long id, String lang) {
                 try {
                         return webClient.get()
                                         .uri(uriBuilder -> uriBuilder
@@ -53,6 +54,12 @@ public class TmdbClient {
                                                         .queryParam("api_key", apiKey)
                                                         .build())
                                         .retrieve()
+                                        .onStatus(status -> status.value() == 404, response -> response
+                                                        .bodyToMono(String.class)
+                                                        .defaultIfEmpty("TMDB client error")
+                                                        .flatMap(body -> Mono.error(
+                                                                        new TmdbNotFoundException(
+                                                                                        ErrorCode.TMDB_NOT_FOUND))))
                                         .onStatus(HttpStatusCode::is4xxClientError, response -> response
                                                         .bodyToMono(String.class)
                                                         .defaultIfEmpty("TMDB client error")
@@ -75,11 +82,15 @@ public class TmdbClient {
                                         .block();
 
                 } catch (WebClientRequestException e) {
-                        throw new TmdbException(ErrorCode.TMDB_CONNECTION, e);
+                        throw new TmdbException(ErrorCode.TMDB_CONNECTION);
+                } catch (TmdbNotFoundException e) {
+
+                        throw e;
+
                 } catch (TmdbException e) {
                         throw e;
                 } catch (Exception e) {
-                        throw new TmdbException(ErrorCode.TMDB_UNKNOWN, e);
+                        throw new TmdbException(ErrorCode.TMDB_UNKNOWN);
                 }
         }
 }
