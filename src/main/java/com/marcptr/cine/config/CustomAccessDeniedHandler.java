@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marcptr.cine.dto.ApiError;
 import com.marcptr.cine.dto.ApiResponse;
 import com.marcptr.cine.model.enums.ErrorCode;
+import com.marcptr.cine.utils.MessageResolver;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,6 +45,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
      */
     private final ObjectMapper mapper;
     private final MessageSource messageSource;
+    private final MessageResolver messageResolver;
 
     /**
      * Maneja las excepciones de tipo {@link AccessDeniedException}, las cuales
@@ -70,14 +72,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
             AccessDeniedException accessDeniedException) throws IOException, ServletException {
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setContentType(("application/json"));
-        ApiResponse<Void> body = new ApiResponse<>(false, null, new ApiError<>(ErrorCode.FORBIDDEN.toString(), resolveMessage(ErrorCode.FORBIDDEN), null));
+        ApiResponse<Void> body = ApiResponse.fail(ErrorCode.FORBIDDEN, messageResolver.resolveMessage(ErrorCode.FORBIDDEN), null);
         mapper.writeValue(response.getOutputStream(), body);
-    }
-
-    private String resolveMessage(ErrorCode code) {
-        return messageSource.getMessage(
-                "error." + code.name(),
-                null,
-                LocaleContextHolder.getLocale());
     }
 }

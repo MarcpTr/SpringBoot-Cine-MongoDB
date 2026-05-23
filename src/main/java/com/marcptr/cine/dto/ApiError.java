@@ -1,7 +1,9 @@
 package com.marcptr.cine.dto;
 
+import com.marcptr.cine.model.enums.ErrorCode;
+
 public record ApiError<T> (
-    String code,
+    ErrorCode code,
     String message,
-    Object details
+    T details
 ){}

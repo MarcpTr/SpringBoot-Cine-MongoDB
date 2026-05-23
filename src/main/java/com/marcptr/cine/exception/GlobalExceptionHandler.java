@@ -35,8 +35,7 @@ public class GlobalExceptionHandler {
                 ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
 
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                .body(ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode),
-                                                null));
+                                .body(ApiResponse.fail(errorCode, messageResolver.resolveMessage(errorCode),null));
         }
 
         @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -50,7 +49,7 @@ public class GlobalExceptionHandler {
                                 .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
 
                 return ResponseEntity.badRequest().body(
-                                ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode),
+                                ApiResponse.fail(errorCode, messageResolver.resolveMessage(errorCode),
                                                 errors));
         }
 
@@ -68,7 +67,7 @@ public class GlobalExceptionHandler {
                 });
 
                 return ResponseEntity.badRequest().body(
-                                ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode),
+                                ApiResponse.fail(errorCode, messageResolver.resolveMessage(errorCode),
                                                 errors));
         }
 
@@ -86,7 +85,7 @@ public class GlobalExceptionHandler {
                 errors.put(field, "Required type: " + expectedType);
 
                 return ResponseEntity.badRequest()
-                                .body(ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode),
+                                .body(ApiResponse.fail(errorCode, messageResolver.resolveMessage(errorCode),
                                                 errors));
         }
 
@@ -105,7 +104,7 @@ public class GlobalExceptionHandler {
                 errors.put("allowed", "Allowed methods: " + supportedMethods);
 
                 return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
-                                .body(ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode),
+                                .body(ApiResponse.fail(errorCode, messageResolver.resolveMessage(errorCode),
                                                 errors));
         }
 
@@ -115,7 +114,7 @@ public class GlobalExceptionHandler {
                 ErrorCode errrorCode = ErrorCode.INVALID_JSON;
 
                 return ResponseEntity.badRequest().body(
-                                ApiResponse.fail(errrorCode.toString(), messageResolver.resolveMessage(errrorCode),
+                                ApiResponse.fail(errrorCode, messageResolver.resolveMessage(errrorCode),
                                                 null));
         }
 
@@ -129,7 +128,7 @@ public class GlobalExceptionHandler {
                 errors.put(ex.getParameterName(), "Parameter is required");
 
                 return ResponseEntity.badRequest()
-                                .body(ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode),
+                                .body(ApiResponse.fail(errorCode, messageResolver.resolveMessage(errorCode),
                                                 errors));
         }
 
@@ -139,7 +138,7 @@ public class GlobalExceptionHandler {
                 ErrorCode errorCode = ErrorCode.ACCESS_DENIED;
 
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                                .body(ApiResponse.fail(errorCode.toString(), messageResolver.resolveMessage(errorCode),
+                                .body(ApiResponse.fail(errorCode, messageResolver.resolveMessage(errorCode),
                                                 null));
         }
 
@@ -150,8 +149,8 @@ public class GlobalExceptionHandler {
                         TmdbException ex) {
 
                 String message = messageResolver.resolveMessage(ex.getCode());
-                ApiError<Object> error = new ApiError<>(
-                                ex.getCode().name(),
+                ApiError error = new ApiError<>(
+                                ex.getCode(),
                                 message,
                                 ex.getDetails());
 
@@ -163,8 +162,8 @@ public class GlobalExceptionHandler {
                         TmdbNotFoundException ex) {
 
                 String message = messageResolver.resolveMessage(ex.getCode());
-                ApiError<Object> error = new ApiError<>(
-                                ex.getCode().name(),
+                ApiError error = new ApiError<>(
+                                ex.getCode(),
                                 message,
                                 ex.getDetails());
 
@@ -177,7 +176,7 @@ public class GlobalExceptionHandler {
 
                 String message = messageResolver.resolveMessage(ex.getCode());
                 ApiError<Object> error = new ApiError<>(
-                                ex.getCode().name(),
+                                ex.getCode(),
                                 message,
                                 ex.getDetails());
 
@@ -189,7 +188,7 @@ public class GlobalExceptionHandler {
                         JwtAuthenticationException ex) {
                 String message = messageResolver.resolveMessage(ex.getCode());
                 ApiError<Object> error = new ApiError<>(
-                                ex.getCode().name(),
+                                ex.getCode(),
                                 message,
                                 ex.getDetails());
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -201,7 +200,7 @@ public class GlobalExceptionHandler {
 
                 String message = messageResolver.resolveMessage(ex.getCode());
                 ApiError<Object> error = new ApiError<>(
-                                ex.getCode().name(),
+                                ex.getCode(),
                                 message,
                                 ex.getDetails());
 
@@ -214,7 +213,7 @@ public class GlobalExceptionHandler {
                         ResourceAlreadyExistsException ex) {
                 String message = messageResolver.resolveMessage(ex.getCode());
                 ApiError<Object> error = new ApiError<>(
-                                ex.getCode().name(),
+                                ex.getCode(),
                                 message,
                                 ex.getDetails());
                 return ResponseEntity.status(HttpStatus.CONFLICT)

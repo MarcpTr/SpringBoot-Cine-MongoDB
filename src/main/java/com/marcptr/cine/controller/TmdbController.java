@@ -7,7 +7,6 @@ import com.marcptr.cine.dto.response.tmdb.TmdbMovieResponse;
 import com.marcptr.cine.service.MovieService;
 
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -25,7 +24,7 @@ public class TmdbController {
     private final MovieService mService;
 
     @GetMapping("/search")
-    public String getMethodName(@Valid @ModelAttribute SearchRequest sRequest, Locale locale) {
+    public String search(@Valid @ModelAttribute SearchRequest sRequest, Locale locale) {
         return "";
     }
 

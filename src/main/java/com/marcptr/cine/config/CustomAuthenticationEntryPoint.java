@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marcptr.cine.dto.ApiError;
 import com.marcptr.cine.dto.ApiResponse;
 import com.marcptr.cine.model.enums.ErrorCode;
+import com.marcptr.cine.utils.MessageResolver;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,7 +43,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
      * Mapper utilizado para serializar la respuesta de error en formato JSON.
      */
     private final ObjectMapper mapper;
-    private final MessageSource messageSource;
+    private final MessageResolver messageResolver;
 
     /**
      * Maneja las excepciones de tipo {@link AuthenticationException}, las cuales
@@ -67,15 +68,9 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             AuthenticationException authException) throws IOException, ServletException {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json");
-        ApiResponse<Void> body = new ApiResponse<>(false, null,
-                new ApiError<>(ErrorCode.UNAUTHORIZED.toString(), resolveMessage(ErrorCode.UNAUTHORIZED), null));
+        ApiResponse<Void> body = ApiResponse.fail(ErrorCode.UNAUTHORIZED, messageResolver.resolveMessage(ErrorCode.UNAUTHORIZED), null);
         mapper.writeValue(response.getOutputStream(), body);
     }
 
-    private String resolveMessage(ErrorCode code) {
-        return messageSource.getMessage(
-                "error." + code.name(),
-                null,
-                LocaleContextHolder.getLocale());
-    }
+
 }
