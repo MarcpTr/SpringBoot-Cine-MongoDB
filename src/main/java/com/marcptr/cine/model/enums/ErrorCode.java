@@ -27,5 +27,7 @@ public enum ErrorCode {
     TMDB_NOT_FOUND,
     TMDB_SERVER,
     TMDB_CONNECTION,
-    TMDB_UNKNOWN
+    TMDB_UNKNOWN,
+    INVALID_PERIOD,
+    INVALID_PAGE
 }

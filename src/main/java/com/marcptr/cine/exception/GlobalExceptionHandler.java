@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -35,7 +36,7 @@ public class GlobalExceptionHandler {
                 ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
 
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                .body(ApiResponse.fail(errorCode, messageResolver.resolveMessage(errorCode),null));
+                                .body(ApiResponse.fail(errorCode, messageResolver.resolveMessage(errorCode), null));
         }
 
         @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -45,8 +46,14 @@ public class GlobalExceptionHandler {
                 ErrorCode errorCode = ErrorCode.VALIDATION_ERROR;
                 Map<String, String> errors = new HashMap<>();
 
-                ex.getBindingResult().getFieldErrors()
-                                .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
+                ex.getBindingResult().getFieldErrors().forEach(error -> {
+
+                        if ("period".equals(error.getField())) {
+                                errors.put("period", messageResolver.resolveMessage(ErrorCode.INVALID_PERIOD));
+                        } else {
+                                errors.put(error.getField(), error.getDefaultMessage());
+                        }
+                });
 
                 return ResponseEntity.badRequest().body(
                                 ApiResponse.fail(errorCode, messageResolver.resolveMessage(errorCode),
