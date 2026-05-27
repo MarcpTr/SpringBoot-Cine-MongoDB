@@ -1,11 +1,7 @@
-package com.marcptr.cine.document;
+package com.marcptr.cine.dto.response;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.marcptr.cine.model.CollectionInfo;
@@ -22,73 +18,80 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Document(collection = "movies")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MovieDocument {
+public class MovieResponse {
 
-    @Id
-    private String id; //{movieId}_{lang}
-
-    @Indexed
-    private Long movieId;
-
-    @Indexed
-    private String lang;
-    @Indexed(expireAfterSeconds = 86400)
-    @JsonProperty("cached_at")
-    private Instant cachedAt;
-    
-    private boolean notFound;
+    private Long id;
 
     private Boolean adult;
+
+    @JsonProperty("backdrop_path")
     private String backdropPath;
 
+    @JsonProperty("belongs_to_collection")
     private CollectionInfo belongsToCollection;
 
     private Long budget;
+
     private List<Genre> genres;
 
     private String homepage;
 
+    @JsonProperty("imdb_id")
     private String imdbId;
 
+    @JsonProperty("origin_country")
     private List<String> originCountry;
 
+    @JsonProperty("original_language")
     private String originalLanguage;
+
+    @JsonProperty("original_title")
     private String originalTitle;
 
     private String overview;
+
     private Double popularity;
 
+    @JsonProperty("poster_path")
     private String posterPath;
 
+    @JsonProperty("production_companies")
     private List<ProductionCompany> productionCompanies;
+
+    @JsonProperty("production_countries")
     private List<ProductionCountry> productionCountries;
 
+    @JsonProperty("release_date")
     private LocalDate releaseDate;
 
     private Long revenue;
+
     private Integer runtime;
 
     private Boolean softcore;
 
+    @JsonProperty("spoken_languages")
     private List<SpokenLanguage> spokenLanguages;
 
     private String status;
+
     private String tagline;
+
     private String title;
 
     private Boolean video;
 
+    @JsonProperty("vote_average")
     private Double voteAverage;
+
+    @JsonProperty("vote_count")
     private Integer voteCount;
 
     private Videos videos;
+
     private Credits credits;
 
-    public static String buildId(Long movieId, String lang) {
-        return movieId + "_" + lang;
-    }
 }

@@ -1,10 +1,13 @@
 package com.marcptr.cine.config;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
+import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -15,13 +18,26 @@ public class CacheConfig {
 
     @Bean
     public CacheManager cacheManager() {
-        CaffeineCacheManager manager = new CaffeineCacheManager("movies");
+        SimpleCacheManager manager = new SimpleCacheManager();
 
-        manager.setCaffeine(
-                Caffeine.newBuilder()
-                        .maximumSize(1000)
-                        .expireAfterWrite(Duration.ofHours(6)));
+    CaffeineCache movies =
+            new CaffeineCache(
+                    "movies",
+                    Caffeine.newBuilder()
+                            .maximumSize(1000)
+                            .expireAfterWrite(Duration.ofHours(6))
+                            .build());
 
-        return manager;
+    CaffeineCache trends =
+            new CaffeineCache(
+                    "trends",
+                    Caffeine.newBuilder()
+                            .maximumSize(100)
+                            .expireAfterWrite(Duration.ofMinutes(15))
+                            .build());
+
+    manager.setCaches(List.of(movies, trends));
+
+    return manager;
     }
 }

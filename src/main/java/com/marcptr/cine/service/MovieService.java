@@ -6,10 +6,13 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import com.marcptr.cine.client.TmdbClient;
 import com.marcptr.cine.document.MovieDocument;
+import com.marcptr.cine.dto.response.MovieResponse;
 import com.marcptr.cine.dto.response.tmdb.TmdbMovieResponse;
+import com.marcptr.cine.dto.response.tmdb.TmdbTrendResponse;
 import com.marcptr.cine.exception.tmdb.TmdbNotFoundException;
 import com.marcptr.cine.mapper.MovieMapper;
 import com.marcptr.cine.model.enums.ErrorCode;
+import com.marcptr.cine.model.enums.Period;
 import com.marcptr.cine.repository.MovieDocumentRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +24,7 @@ public class MovieService {
     private final MovieMapper movieMapper;
 
     @Cacheable(value = "movies", key = "#id + '-' + #lang")
-    public TmdbMovieResponse getMovie(long id, String lang) {
+    public MovieResponse getMovie(long id, String lang) {
          return mDocumentRepository
             .findByMovieIdAndLang(id, lang)
             .map(doc -> {
@@ -34,7 +37,7 @@ public class MovieService {
             })
             .orElseGet(() -> fetchAndSaveMovie(id, lang));
 }
-    private TmdbMovieResponse fetchAndSaveMovie(long id, String lang) {
+    private MovieResponse fetchAndSaveMovie(long id, String lang) {
 
         try {
 
@@ -60,4 +63,17 @@ public class MovieService {
             throw e;
         }
     }
+/*     public TmdbTrendResponse getTrending(Period period, Integer page, String string) {
+           return mDocumentRepository
+            .findByMovieIdAndLang(id, lang)
+            .map(doc -> {
+
+                if (doc.isNotFound()) {
+                    throw new TmdbNotFoundException(ErrorCode.TMDB_NOT_FOUND);
+                }
+
+                return movieMapper.toDto(doc);
+            })
+            .orElseGet(() -> fetchAndSaveMovie(id, lang));
+    } */
 }
