@@ -25,18 +25,19 @@ public class MovieService {
 
     @Cacheable(value = "movies", key = "#id + '-' + #lang")
     public MovieResponse getMovie(long id, String lang) {
-         return mDocumentRepository
-            .findByMovieIdAndLang(id, lang)
-            .map(doc -> {
+        return mDocumentRepository
+                .findByMovieIdAndLang(id, lang)
+                .map(doc -> {
 
-                if (doc.isNotFound()) {
-                    throw new TmdbNotFoundException(ErrorCode.TMDB_NOT_FOUND);
-                }
+                    if (doc.isNotFound()) {
+                        throw new TmdbNotFoundException(ErrorCode.TMDB_NOT_FOUND);
+                    }
 
-                return movieMapper.toDto(doc);
-            })
-            .orElseGet(() -> fetchAndSaveMovie(id, lang));
-}
+                    return movieMapper.toDto(doc);
+                })
+                .orElseGet(() -> fetchAndSaveMovie(id, lang));
+    }
+
     private MovieResponse fetchAndSaveMovie(long id, String lang) {
 
         try {
@@ -63,17 +64,15 @@ public class MovieService {
             throw e;
         }
     }
-/*     public TmdbTrendResponse getTrending(Period period, Integer page, String string) {
-           return mDocumentRepository
-            .findByMovieIdAndLang(id, lang)
-            .map(doc -> {
 
-                if (doc.isNotFound()) {
-                    throw new TmdbNotFoundException(ErrorCode.TMDB_NOT_FOUND);
-                }
-
-                return movieMapper.toDto(doc);
-            })
-            .orElseGet(() -> fetchAndSaveMovie(id, lang));
-    } */
+    @Cacheable(value = "tmdbTrendingDay", key = "#page + '-' + #lang")
+    public TmdbTrendResponse getTrendingDay(int page, String lang) {
+        TmdbTrendResponse tmdbTrendResponse = tmdbClient.getTrend(Period.DAY, page, lang);
+        return tmdbTrendResponse;
+    }
+    @Cacheable(value = "tmdbTrendingWeek", key = "#page + '-' + #lang")
+    public TmdbTrendResponse getTrendingWeek(int page, String lang) {
+        TmdbTrendResponse tmdbTrendResponse = tmdbClient.getTrend(Period.WEEK, page, lang);
+        return tmdbTrendResponse;
+    }
 }

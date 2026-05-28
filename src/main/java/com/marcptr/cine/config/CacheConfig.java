@@ -35,8 +35,24 @@ public class CacheConfig {
                             .maximumSize(100)
                             .expireAfterWrite(Duration.ofMinutes(15))
                             .build());
+      CaffeineCache trendingDay =
+            new CaffeineCache(
+                "tmdbTrendingDay",
+                Caffeine.newBuilder()
+                    .maximumSize(500)
+                    .expireAfterWrite(Duration.ofMinutes(20))
+                    .build()
+            );
 
-    manager.setCaches(List.of(movies, trends));
+        CaffeineCache trendingWeek =
+            new CaffeineCache(
+                "tmdbTrendingWeek",
+                Caffeine.newBuilder()
+                    .maximumSize(500)
+                    .expireAfterWrite(Duration.ofHours(4))
+                    .build()
+            );
+    manager.setCaches(List.of(movies, trends, trendingDay, trendingWeek));
 
     return manager;
     }
