@@ -19,6 +19,13 @@ public class CacheConfig {
     @Bean
     public CacheManager cacheManager() {
         SimpleCacheManager manager = new SimpleCacheManager();
+  CaffeineCache search =
+            new CaffeineCache(
+                    "search",
+                    Caffeine.newBuilder()
+                            .maximumSize(1000)
+                            .expireAfterWrite(Duration.ofHours(6))
+                            .build());
 
     CaffeineCache movies =
             new CaffeineCache(
@@ -52,7 +59,7 @@ public class CacheConfig {
                     .expireAfterWrite(Duration.ofHours(4))
                     .build()
             );
-    manager.setCaches(List.of(movies, trends, trendingDay, trendingWeek));
+    manager.setCaches(List.of(movies, trends, trendingDay, trendingWeek,search));
 
     return manager;
     }

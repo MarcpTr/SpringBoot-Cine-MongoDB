@@ -8,11 +8,9 @@ import com.marcptr.cine.client.TmdbClient;
 import com.marcptr.cine.document.MovieDocument;
 import com.marcptr.cine.dto.response.MovieResponse;
 import com.marcptr.cine.dto.response.tmdb.TmdbMovieResponse;
-import com.marcptr.cine.dto.response.tmdb.TmdbTrendResponse;
 import com.marcptr.cine.exception.tmdb.TmdbNotFoundException;
 import com.marcptr.cine.mapper.MovieMapper;
 import com.marcptr.cine.model.enums.ErrorCode;
-import com.marcptr.cine.model.enums.Period;
 import com.marcptr.cine.repository.MovieDocumentRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -65,14 +63,4 @@ public class MovieService {
         }
     }
 
-    @Cacheable(value = "tmdbTrendingDay", key = "#page + '-' + #lang")
-    public TmdbTrendResponse getTrendingDay(int page, String lang) {
-        TmdbTrendResponse tmdbTrendResponse = tmdbClient.getTrend(Period.DAY, page, lang);
-        return tmdbTrendResponse;
-    }
-    @Cacheable(value = "tmdbTrendingWeek", key = "#page + '-' + #lang")
-    public TmdbTrendResponse getTrendingWeek(int page, String lang) {
-        TmdbTrendResponse tmdbTrendResponse = tmdbClient.getTrend(Period.WEEK, page, lang);
-        return tmdbTrendResponse;
-    }
 }

@@ -10,15 +10,6 @@ import lombok.Setter;
 public class SearchRequest {
     @NotBlank
     private String query;
-
-    private Boolean includeAdult = false;
-
-    private String primaryReleaseYear;
-
     @Min(1)
     private Integer page = 1;
-
-    private String region;
-
-    private String year;
 }

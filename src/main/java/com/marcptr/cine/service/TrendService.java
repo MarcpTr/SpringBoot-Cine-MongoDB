@@ -1,0 +1,26 @@
+package com.marcptr.cine.service;
+
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+
+import com.marcptr.cine.client.TmdbClient;
+import com.marcptr.cine.dto.response.tmdb.TmdbTrendResponse;
+import com.marcptr.cine.model.enums.Period;
+
+import lombok.RequiredArgsConstructor;
+@RequiredArgsConstructor
+@Service
+public class TrendService {
+        private final TmdbClient tmdbClient;
+
+    @Cacheable(value = "tmdbTrendingDay", key = "#page + '-' + #lang")
+    public TmdbTrendResponse getTrendingDay(int page, String lang) {
+        TmdbTrendResponse tmdbTrendResponse = tmdbClient.getTrend(Period.DAY, page, lang);
+        return tmdbTrendResponse;
+    }
+    @Cacheable(value = "tmdbTrendingWeek", key = "#page + '-' + #lang")
+    public TmdbTrendResponse getTrendingWeek(int page, String lang) {
+        TmdbTrendResponse tmdbTrendResponse = tmdbClient.getTrend(Period.WEEK, page, lang);
+        return tmdbTrendResponse;
+    }
+}
