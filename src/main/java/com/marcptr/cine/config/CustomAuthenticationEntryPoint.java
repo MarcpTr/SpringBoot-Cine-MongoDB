@@ -10,8 +10,8 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.marcptr.cine.dto.ApiError;
-import com.marcptr.cine.dto.ApiResponse;
+import com.marcptr.cine.dto.common.ApiError;
+import com.marcptr.cine.dto.common.ApiResponse;
 import com.marcptr.cine.model.enums.ErrorCode;
 import com.marcptr.cine.utils.MessageResolver;
 

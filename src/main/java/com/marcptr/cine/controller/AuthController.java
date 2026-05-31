@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.marcptr.cine.dto.*;
+import com.marcptr.cine.dto.common.ApiResponse;
 import com.marcptr.cine.dto.request.LoginRequest;
 import com.marcptr.cine.dto.request.RefreshRequest;
 import com.marcptr.cine.dto.request.RegisterRequest;

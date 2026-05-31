@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.marcptr.cine.client.TmdbClient;
 import com.marcptr.cine.document.MovieDocument;
 import com.marcptr.cine.dto.response.MovieResponse;
-import com.marcptr.cine.dto.response.tmdb.TmdbMovieResponse;
+import com.marcptr.cine.dto.tmdb.response.TmdbMovieResponse;
 import com.marcptr.cine.exception.tmdb.TmdbNotFoundException;
 import com.marcptr.cine.mapper.MovieMapper;
 import com.marcptr.cine.model.enums.ErrorCode;

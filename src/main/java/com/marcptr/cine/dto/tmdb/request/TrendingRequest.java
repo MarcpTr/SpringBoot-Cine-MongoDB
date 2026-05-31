@@ -1,4 +1,4 @@
-package com.marcptr.cine.dto.request.tmdb;
+package com.marcptr.cine.dto.tmdb.request;
 
 
 import com.marcptr.cine.model.enums.Period;

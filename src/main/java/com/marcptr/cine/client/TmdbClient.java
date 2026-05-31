@@ -6,9 +6,10 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
-import com.marcptr.cine.dto.response.tmdb.TmdbMovieResponse;
-import com.marcptr.cine.dto.response.tmdb.TmdbSearchMovieResponse;
-import com.marcptr.cine.dto.response.tmdb.TmdbTrendResponse;
+
+import com.marcptr.cine.dto.tmdb.response.TmdbMovieResponse;
+import com.marcptr.cine.dto.tmdb.response.TmdbSearchMovieResponse;
+import com.marcptr.cine.dto.tmdb.response.TmdbTrendResponse;
 import com.marcptr.cine.exception.tmdb.TmdbException;
 import com.marcptr.cine.exception.tmdb.TmdbNotFoundException;
 import com.marcptr.cine.model.enums.ErrorCode;

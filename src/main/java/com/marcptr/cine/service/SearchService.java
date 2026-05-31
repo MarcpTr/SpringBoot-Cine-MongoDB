@@ -5,7 +5,7 @@ import java.util.Locale;
 import org.springframework.stereotype.Service;
 
 import com.marcptr.cine.client.TmdbClient;
-import com.marcptr.cine.dto.request.tmdb.SearchRequest;
+import com.marcptr.cine.dto.tmdb.request.SearchRequest;
 
 import lombok.RequiredArgsConstructor;
 

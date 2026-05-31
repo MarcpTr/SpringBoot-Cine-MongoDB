@@ -1,4 +1,4 @@
-package com.marcptr.cine.dto.request.tmdb;
+package com.marcptr.cine.dto.tmdb.request;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

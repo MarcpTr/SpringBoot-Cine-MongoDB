@@ -2,7 +2,7 @@ package com.marcptr.cine.mapper;
 
 import com.marcptr.cine.document.MovieDocument;
 import com.marcptr.cine.dto.response.MovieResponse;
-import com.marcptr.cine.dto.response.tmdb.TmdbMovieResponse;
+import com.marcptr.cine.dto.tmdb.response.TmdbMovieResponse;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -2,11 +2,11 @@ package com.marcptr.cine.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.marcptr.cine.dto.request.tmdb.SearchRequest;
-import com.marcptr.cine.dto.request.tmdb.TrendingRequest;
 import com.marcptr.cine.dto.response.MovieResponse;
-import com.marcptr.cine.dto.response.tmdb.TmdbSearchMovieResponse;
-import com.marcptr.cine.dto.response.tmdb.TmdbTrendResponse;
+import com.marcptr.cine.dto.tmdb.request.SearchRequest;
+import com.marcptr.cine.dto.tmdb.request.TrendingRequest;
+import com.marcptr.cine.dto.tmdb.response.TmdbSearchMovieResponse;
+import com.marcptr.cine.dto.tmdb.response.TmdbTrendResponse;
 import com.marcptr.cine.service.MovieService;
 import com.marcptr.cine.service.SearchService;
 import com.marcptr.cine.service.TrendService;
