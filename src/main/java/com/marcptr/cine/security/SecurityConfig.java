@@ -1,4 +1,4 @@
-package com.marcptr.cine.config;
+package com.marcptr.cine.security;
 
 import lombok.RequiredArgsConstructor;
 

@@ -2,6 +2,7 @@ package com.marcptr.cine.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.marcptr.cine.dto.common.ApiResponse;
 import com.marcptr.cine.dto.response.MovieResponse;
 import com.marcptr.cine.dto.tmdb.request.SearchRequest;
 import com.marcptr.cine.dto.tmdb.request.TrendingRequest;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Locale;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -30,20 +32,20 @@ public class TmdbController {
     private final SearchService sService;
 
     @GetMapping("/trending")
-    public TmdbTrendResponse getTrending(@Valid TrendingRequest tRequest, Locale locale) {
+    public ResponseEntity<ApiResponse<TmdbTrendResponse>> getTrending(@Valid TrendingRequest tRequest, Locale locale) {
         switch (tRequest.getPeriod()) {
             case WEEK:
-                return tService.getTrendingWeek(tRequest.getPage(), locale.getLanguage() + "-" + locale.getCountry());
+                return ResponseEntity.ok(ApiResponse.ok(tService.getTrendingWeek(tRequest.getPage(), locale.getLanguage() + "-" + locale.getCountry())));
             case DAY:
-                return tService.getTrendingDay(tRequest.getPage(), locale.getLanguage() + "-" + locale.getCountry());
+                return ResponseEntity.ok(ApiResponse.ok(tService.getTrendingDay(tRequest.getPage(), locale.getLanguage() + "-" + locale.getCountry())));
             default:
-                return tService.getTrendingDay(tRequest.getPage(), locale.getLanguage() + "-" + locale.getCountry());
+                return ResponseEntity.ok(ApiResponse.ok(tService.getTrendingDay(tRequest.getPage(), locale.getLanguage() + "-" + locale.getCountry())));
         }
     }
 
     @GetMapping("/movie/{id}")
-    public MovieResponse getMovie(@PathVariable long id, Locale locale) {
-        return mService.getMovie(id, locale.getLanguage() + "-" + locale.getCountry());
+    public ResponseEntity<ApiResponse<MovieResponse>> getMovie(@PathVariable long id, Locale locale) {
+        return  ResponseEntity.ok(ApiResponse.ok(mService.getMovie(id, locale.getLanguage() + "-" + locale.getCountry())));
     }
 
     /* @GetMapping("/search")
