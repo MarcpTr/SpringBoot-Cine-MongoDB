@@ -3,8 +3,8 @@ package com.marcptr.cine.service;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import com.marcptr.cine.client.TmdbClient;
-import com.marcptr.cine.dto.tmdb.response.TmdbTrendResponse;
+import com.marcptr.cine.integration.tmdb.client.TmdbClient;
+import com.marcptr.cine.integration.tmdb.dto.TmdbTrendResponse;
 import com.marcptr.cine.model.enums.Period;
 
 import lombok.RequiredArgsConstructor;

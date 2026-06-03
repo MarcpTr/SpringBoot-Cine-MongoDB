@@ -4,12 +4,13 @@ import java.time.Instant;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import com.marcptr.cine.client.TmdbClient;
+
 import com.marcptr.cine.document.MovieDocument;
 import com.marcptr.cine.dto.response.MovieResponse;
-import com.marcptr.cine.dto.tmdb.response.TmdbMovieResponse;
 import com.marcptr.cine.exception.tmdb.TmdbNotFoundException;
-import com.marcptr.cine.mapper.MovieMapper;
+import com.marcptr.cine.integration.tmdb.client.TmdbClient;
+import com.marcptr.cine.integration.tmdb.dto.TmdbMovieResponse;
+import com.marcptr.cine.integration.tmdb.mapper.MovieMapper;
 import com.marcptr.cine.model.enums.ErrorCode;
 import com.marcptr.cine.repository.MovieDocumentRepository;
 import lombok.RequiredArgsConstructor;

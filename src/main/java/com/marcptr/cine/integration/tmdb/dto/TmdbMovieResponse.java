@@ -1,4 +1,4 @@
-package com.marcptr.cine.dto.tmdb.response;
+package com.marcptr.cine.integration.tmdb.dto;
 
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,4 +1,4 @@
-package com.marcptr.cine.client;
+package com.marcptr.cine.integration.tmdb.client;
 
 import java.time.Duration;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 
-import com.marcptr.cine.dto.tmdb.response.TmdbMovieResponse;
-import com.marcptr.cine.dto.tmdb.response.TmdbSearchMovieResponse;
-import com.marcptr.cine.dto.tmdb.response.TmdbTrendResponse;
 import com.marcptr.cine.exception.tmdb.TmdbException;
 import com.marcptr.cine.exception.tmdb.TmdbNotFoundException;
+import com.marcptr.cine.integration.tmdb.dto.TmdbMovieResponse;
+import com.marcptr.cine.integration.tmdb.dto.TmdbSearchMovieResponse;
+import com.marcptr.cine.integration.tmdb.dto.TmdbTrendResponse;
 import com.marcptr.cine.model.enums.ErrorCode;
 import com.marcptr.cine.model.enums.Period;
 
@@ -27,11 +27,13 @@ public class TmdbClient {
         @Value("${tmdb.api-key}")
         String apiKey;
 
-        public TmdbSearchMovieResponse searchMovies(String title) {
+        public TmdbSearchMovieResponse searchMovies(String query, Integer page, String lang) {
                 return webClient.get()
                                 .uri(uriBuilder -> uriBuilder
                                                 .path("/search/movie")
-                                                .queryParam("query", title)
+                                                .queryParam("query", query)
+                                                .queryParam("lang", lang)
+                                                .queryParam("page", page)
                                                 .queryParam("api_key", apiKey)
                                                 .build())
                                 .retrieve()

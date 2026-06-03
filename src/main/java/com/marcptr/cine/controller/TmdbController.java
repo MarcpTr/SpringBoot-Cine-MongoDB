@@ -3,11 +3,12 @@ package com.marcptr.cine.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.marcptr.cine.dto.common.ApiResponse;
+import com.marcptr.cine.dto.request.SearchRequest;
+import com.marcptr.cine.dto.request.TrendingRequest;
 import com.marcptr.cine.dto.response.MovieResponse;
-import com.marcptr.cine.dto.tmdb.request.SearchRequest;
-import com.marcptr.cine.dto.tmdb.request.TrendingRequest;
-import com.marcptr.cine.dto.tmdb.response.TmdbSearchMovieResponse;
-import com.marcptr.cine.dto.tmdb.response.TmdbTrendResponse;
+import com.marcptr.cine.dto.response.SearchResponse;
+import com.marcptr.cine.integration.tmdb.dto.TmdbSearchMovieResponse;
+import com.marcptr.cine.integration.tmdb.dto.TmdbTrendResponse;
 import com.marcptr.cine.service.MovieService;
 import com.marcptr.cine.service.SearchService;
 import com.marcptr.cine.service.TrendService;
@@ -48,9 +49,9 @@ public class TmdbController {
         return  ResponseEntity.ok(ApiResponse.ok(mService.getMovie(id, locale.getLanguage() + "-" + locale.getCountry())));
     }
 
-    /* @GetMapping("/search")
-    public SearchMovieResponse search(@Valid SearchRequest sRequest, Locale locale) {
-        sService.getSearch(sRequest.getQuery(), sRequest.getPage(), locale.getLanguage()+locale.getCountry());
-        return sRequest.getQuery() + sRequest.getPage();
-    } */
+     @GetMapping("/search")
+    public ResponseEntity<ApiResponse<SearchResponse>> search(@Valid SearchRequest sRequest, Locale locale) {
+       return  ResponseEntity.ok(ApiResponse.ok(sService.getSearch(sRequest.getQuery(), sRequest.getPage(), locale.getLanguage()+"-"+locale.getCountry())));
+        
+    } 
 }
