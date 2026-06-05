@@ -1,4 +1,4 @@
-package com.marcptr.cine.config;
+package com.marcptr.cine.integration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
