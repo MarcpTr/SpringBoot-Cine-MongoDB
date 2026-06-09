@@ -36,7 +36,7 @@ public class MovieDocument {
 
     @Indexed
     private String lang;
-    @Indexed(expireAfterSeconds = 86400)
+    @Indexed(expireAfter  = "86400s")
     @JsonProperty("cached_at")
     private Instant cachedAt;
     

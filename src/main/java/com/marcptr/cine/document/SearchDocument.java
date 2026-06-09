@@ -35,7 +35,7 @@ public class SearchDocument {
     private int totalPages;
     @JsonProperty("total_results")
     private int totalResults;
-    @Indexed(expireAfterSeconds = 86400)
+    @Indexed(expireAfter  = "86400s")
     @JsonProperty("cached_at")
     private Instant cachedAt;
 }

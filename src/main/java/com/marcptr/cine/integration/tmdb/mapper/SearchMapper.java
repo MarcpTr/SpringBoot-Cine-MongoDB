@@ -12,7 +12,9 @@ public interface SearchMapper {
 
     @Mapping(target = "id", source = "id")
     @Mapping(target = "results", source = "dto.results")
+    @Mapping(target = "cachedAt", expression = "java(java.time.Instant.now())")
+
     SearchDocument toDocument(TmdbSearchMovieResponse dto, String id, String query, String lang, Integer page);
-   
+
     SearchResponse toDto(SearchDocument doc);
 }
