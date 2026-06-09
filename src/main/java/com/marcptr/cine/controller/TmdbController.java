@@ -7,7 +7,6 @@ import com.marcptr.cine.dto.request.SearchRequest;
 import com.marcptr.cine.dto.request.TrendingRequest;
 import com.marcptr.cine.dto.response.MovieResponse;
 import com.marcptr.cine.dto.response.SearchResponse;
-import com.marcptr.cine.integration.tmdb.dto.TmdbSearchMovieResponse;
 import com.marcptr.cine.integration.tmdb.dto.TmdbTrendResponse;
 import com.marcptr.cine.service.MovieService;
 import com.marcptr.cine.service.SearchService;
