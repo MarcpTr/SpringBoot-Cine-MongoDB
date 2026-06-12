@@ -29,17 +29,20 @@ import lombok.NoArgsConstructor;
 public class MovieDocument {
 
     @Id
-    private String id; //{movieId}_{lang}
+    private String id; // {movieId}_{lang}
 
     @Indexed
     private Long movieId;
 
     @Indexed
     private String lang;
-    @Indexed(expireAfter  = "86400s")
-    @JsonProperty("cached_at")
-    private Instant cachedAt;
-    
+    @JsonProperty("updated_at")
+    private Instant updatedAt;
+
+    @Indexed(expireAfter = "30d")
+    @JsonProperty("last_accessed_at")
+    private Instant lastAccessedAt;
+
     private boolean notFound;
 
     private Boolean adult;

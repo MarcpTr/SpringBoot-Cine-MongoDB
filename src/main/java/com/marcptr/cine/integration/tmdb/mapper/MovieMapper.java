@@ -15,7 +15,8 @@ public interface MovieMapper {
 
     @Mapping(target = "movieId", source = "dto.id")
     @Mapping(target = "id", expression = "java(MovieDocument.buildId(dto.getId(), lang))")
-    @Mapping(target = "cachedAt", expression = "java(java.time.Instant.now())")
+    @Mapping(target = "updatedAt", expression = "java(java.time.Instant.now())")
+    @Mapping(target = "lastAccessedAt", expression = "java(java.time.Instant.now())")
     MovieDocument toDocument(TmdbMovieResponse dto, String lang);
     
     @Mapping(target = "id", source = "movieId")
