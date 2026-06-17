@@ -64,7 +64,24 @@ public class MovieService {
     private MovieResponse handleCachedDocument(MovieDocument document, String cacheKey) {
 
         if (document.isNotFound()) {
-            throw new TmdbNotFoundException(ErrorCode.TMDB_NOT_FOUND);
+            long ageDays = Duration.between(
+                    document.getUpdatedAt(),
+                    Instant.now()).toDays();
+
+            if (ageDays < 1) {
+                throw new TmdbNotFoundException(ErrorCode.TMDB_NOT_FOUND);
+            }
+
+            MovieDocument refreshed = refreshSynchronously(
+                    document.getMovieId(),
+                    document.getLang(),
+                    cacheKey);
+
+            if (refreshed.isNotFound()) {
+                throw new TmdbNotFoundException(ErrorCode.TMDB_NOT_FOUND);
+            }
+
+            return movieMapper.toDto(refreshed);
         }
 
         long ageDays = Duration.between(
@@ -133,7 +150,7 @@ public class MovieService {
         refreshAsync(movieId, lang, cacheKey, refreshKey);
     }
 
-   @Async
+    @Async
     public void refreshAsync(
             long movieId,
             String lang,
@@ -159,7 +176,6 @@ public class MovieService {
         }
     }
 
-
     @Async
     private void updateLastAccessAsync(
             MovieDocument document) {
@@ -179,7 +195,7 @@ public class MovieService {
         mDocumentRepository.save(document);
     }
 
-      private MovieResponse fetchAndSaveMovie(long id, String lang) {
+    private MovieResponse fetchAndSaveMovie(long id, String lang) {
 
         try {
 
@@ -212,7 +228,8 @@ public class MovieService {
             throw e;
         }
     }
-  private String buildKey(long id, String lang) {
+
+    private String buildKey(long id, String lang) {
         return id + "-" + lang;
     }
 }
