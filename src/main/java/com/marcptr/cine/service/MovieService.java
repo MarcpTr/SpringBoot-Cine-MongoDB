@@ -120,22 +120,32 @@ public class MovieService {
             TmdbMovieResponse tmdb = tmdbClient.getMovie(movieId, lang);
 
             MovieDocument updated = movieMapper.toDocument(tmdb, lang);
+            Instant now = Instant.now();
 
-            updated.setUpdatedAt(Instant.now());
-            updated.setLastAccessedAt(Instant.now());
+            updated.setUpdatedAt(now);
+            updated.setLastAccessedAt(now);
 
             mDocumentRepository.save(updated);
 
             movieCache.put(cacheKey, updated);
 
             return updated;
+        } catch (TmdbNotFoundException e) {
 
-        } catch (Exception e) {
+            MovieDocument notFoundDoc = MovieDocument.builder()
+                    .id(buildKey(movieId, lang))
+                    .movieId(movieId)
+                    .lang(lang)
+                    .notFound(true)
+                    .updatedAt(Instant.now())
+                    .lastAccessedAt(Instant.now())
+                    .build();
 
-            return mDocumentRepository
-                    .findByMovieIdAndLang(movieId, lang)
-                    .orElseThrow(() -> new RuntimeException(e));
+            mDocumentRepository.save(notFoundDoc);
+
+            throw e;
         }
+
     }
 
     private void refreshAsyncIfNeeded(Long movieId, String lang, String cacheKey) {
