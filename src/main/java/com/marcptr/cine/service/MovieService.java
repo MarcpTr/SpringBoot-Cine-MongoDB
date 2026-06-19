@@ -3,13 +3,11 @@ package com.marcptr.cine.service;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.ConcurrentHashMap;
-
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
 import com.marcptr.cine.document.MovieDocument;
 import com.marcptr.cine.dto.response.MovieResponse;
 import com.marcptr.cine.exception.tmdb.TmdbNotFoundException;
