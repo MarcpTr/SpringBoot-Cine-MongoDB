@@ -16,7 +16,6 @@ import com.marcptr.cine.integration.tmdb.dto.TmdbMovieResponse;
 import com.marcptr.cine.integration.tmdb.mapper.MovieMapper;
 import com.marcptr.cine.model.enums.ErrorCode;
 import com.marcptr.cine.repository.MovieDocumentRepository;
-
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 
