@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class MovieService {
     private final TmdbClient tmdbClient;
+    private final MovieAsyncService movieAsyncService;
     private final MovieDocumentRepository mDocumentRepository;
     private final MovieMapper movieMapper;
     private final CacheManager cManager;
@@ -51,8 +52,7 @@ public class MovieService {
             return fetchAndSaveMovie(id, lang);
         }
 
-        updateLastAccessAsync(document);
-
+        movieAsyncService.updateLastAccess(document);
         movieCache.put(key, document);
 
         return handleCachedDocument(document, key);
@@ -154,52 +154,12 @@ public class MovieService {
             return;
         }
 
-        refreshAsync(movieId, lang, cacheKey, refreshKey);
-    }
-
-    @Async
-    public void refreshAsync(
-            long movieId,
-            String lang,
-            String cacheKey,
-            String refreshKey) {
-
-        try {
-
-            TmdbMovieResponse tmdb = tmdbClient.getMovie(movieId, lang);
-
-            MovieDocument updated = movieMapper.toDocument(tmdb, lang);
-
-            Instant now = Instant.now();
-            updated.setUpdatedAt(now);
-            updated.setLastAccessedAt(now);
-
-            mDocumentRepository.save(updated);
-            movieCache.put(cacheKey, updated);
-
-        } catch (Exception e) {
-        } finally {
-            refreshInProgress.remove(refreshKey);
-        }
-    }
-
-    @Async
-    private void updateLastAccessAsync(
-            MovieDocument document) {
-
-        Instant now = Instant.now();
-
-        if (document.getLastAccessedAt() != null &&
-                Duration.between(
-                        document.getLastAccessedAt(),
-                        now).toHours() < 24) {
-
-            return;
-        }
-
-        document.setLastAccessedAt(now);
-
-        mDocumentRepository.save(document);
+        movieAsyncService.refreshMovie(
+                movieId,
+                lang,
+                cacheKey,
+                refreshKey,
+                refreshInProgress);
     }
 
     private MovieResponse fetchAndSaveMovie(long id, String lang) {
