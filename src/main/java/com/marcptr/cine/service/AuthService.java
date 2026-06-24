@@ -11,10 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.marcptr.cine.document.Token;
 import com.marcptr.cine.document.User;
-import com.marcptr.cine.dto.*;
 import com.marcptr.cine.dto.request.LoginRequest;
 import com.marcptr.cine.dto.request.RefreshRequest;
 import com.marcptr.cine.dto.request.RegisterRequest;

@@ -1,7 +1,6 @@
 package com.marcptr.cine.config;
 
 /*
-
 *Crea el usuario Admin en la base de datos  
 *si este no existe al arrancar springboot.
 */
@@ -10,7 +9,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import com.marcptr.cine.document.AppSetting;
 import com.marcptr.cine.document.User;
 import com.marcptr.cine.model.enums.Role;

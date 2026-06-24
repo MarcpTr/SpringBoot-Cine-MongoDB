@@ -3,7 +3,6 @@ package com.marcptr.cine.service;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.ConcurrentHashMap;
-
 import org.springframework.cache.CacheManager;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,6 @@ import com.marcptr.cine.integration.tmdb.client.TmdbClient;
 import com.marcptr.cine.integration.tmdb.dto.TmdbMovieResponse;
 import com.marcptr.cine.integration.tmdb.mapper.MovieMapper;
 import com.marcptr.cine.repository.MovieDocumentRepository;
-
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

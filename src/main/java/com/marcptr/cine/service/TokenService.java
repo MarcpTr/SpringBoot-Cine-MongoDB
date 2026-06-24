@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
-
 import com.marcptr.cine.document.Token;
 import com.marcptr.cine.document.User;
 import com.marcptr.cine.dto.response.ActiveSessionResponse;
@@ -13,7 +12,6 @@ import com.marcptr.cine.exception.ResourceNotFoundException;
 import com.marcptr.cine.model.enums.ErrorCode;
 import com.marcptr.cine.model.enums.TokenType;
 import com.marcptr.cine.repository.TokenRepository;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;

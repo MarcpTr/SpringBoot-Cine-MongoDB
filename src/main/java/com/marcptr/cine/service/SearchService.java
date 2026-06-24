@@ -1,22 +1,14 @@
 package com.marcptr.cine.service;
 
-import java.time.Instant;
-import java.util.Locale;
 import org.springframework.stereotype.Service;
 import org.springframework.cache.annotation.Cacheable;
 import org.apache.commons.codec.digest.DigestUtils;
-import com.marcptr.cine.document.MovieDocument;
 import com.marcptr.cine.document.SearchDocument;
-import com.marcptr.cine.dto.request.SearchRequest;
-import com.marcptr.cine.dto.response.MovieResponse;
 import com.marcptr.cine.dto.response.SearchResponse;
-import com.marcptr.cine.exception.tmdb.TmdbNotFoundException;
 import com.marcptr.cine.integration.tmdb.client.TmdbClient;
-import com.marcptr.cine.integration.tmdb.dto.TmdbMovieResponse;
 import com.marcptr.cine.integration.tmdb.dto.TmdbSearchMovieResponse;
 import com.marcptr.cine.integration.tmdb.mapper.SearchMapper;
 import com.marcptr.cine.repository.SearchDocumentRepository;
-
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
