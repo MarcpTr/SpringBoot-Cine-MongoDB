@@ -1,11 +1,8 @@
 package com.marcptr.cine.dto.request;
 
-
 import com.marcptr.cine.model.enums.Period;
-
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
