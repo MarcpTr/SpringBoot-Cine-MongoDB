@@ -2,15 +2,11 @@ package com.marcptr.cine.document;
 
 import java.time.Instant;
 import java.util.List;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.index.Indexed;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.marcptr.cine.dto.response.SearchResponse;
 import com.marcptr.cine.model.SearchResult;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
