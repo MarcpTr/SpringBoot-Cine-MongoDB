@@ -30,7 +30,7 @@ public class CacheConfig {
                     "movies",
                     Caffeine.newBuilder()
                             .maximumSize(1000)
-                            .expireAfterWrite(Duration.ofHours(6))
+                            .expireAfterAccess(Duration.ofHours(6))
                             .build());
 
     CaffeineCache trends =
